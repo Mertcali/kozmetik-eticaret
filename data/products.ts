@@ -51,7 +51,7 @@ export const products: Product[] = [
     id: 3,
     name: "Göz Çevresi Kremi",
     price: 350,
-    image: "https://images.unsplash.com/photo-1570194065650-d99fb4b8f6f7?w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=800&auto=format&fit=crop&q=80",
     category: "cilt-bakimi",
     description: "Göz çevresindeki kırışıklık ve şişlikleri azaltır."
   },
@@ -59,7 +59,7 @@ export const products: Product[] = [
     id: 4,
     name: "Yüz Temizleme Jeli",
     price: 199,
-    image: "https://images.unsplash.com/photo-1556228852-80c3be8c9dff?w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=800&auto=format&fit=crop&q=80",
     category: "cilt-bakimi",
     description: "Tüm cilt tiplerı için uygun, derin temizlik sağlar."
   },
@@ -86,7 +86,7 @@ export const products: Product[] = [
     id: 7,
     name: "Maskara - Siyah",
     price: 229,
-    image: "https://images.unsplash.com/photo-1631214524020-7e18db7f36dd?w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800&auto=format&fit=crop&q=80",
     category: "makyaj",
     description: "Kirpikleri uzatır ve dolgunlaştırır, akma yapmaz.",
     featured: true
@@ -95,7 +95,7 @@ export const products: Product[] = [
     id: 8,
     name: "Far Paleti",
     price: 399,
-    image: "https://images.unsplash.com/photo-1583241800698-c0411f5c72c2?w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&auto=format&fit=crop&q=80",
     category: "makyaj",
     description: "12 farklı ton, mat ve simli karışımı."
   },

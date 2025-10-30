@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ShoppingCart, Search, Sparkles, Menu, X } from "lucide-react"
+import { ShoppingCart, Search, Sparkles, Menu, X, Home, Grid3x3, Package } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useCart } from "@/contexts/CartContext"
 import { Button } from "@/components/ui/button"
@@ -45,21 +45,26 @@ export function Navbar() {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-1">
             {[
-              { href: '/', label: 'Ana Sayfa' },
-              { href: '/kategoriler', label: 'Kategoriler' },
-              { href: '/urunler', label: 'Ürünler' },
-            ].map((link) => (
-              <Link 
-                key={link.href}
-                href={link.href} 
-                className="relative text-sm font-medium text-gray-700 hover:text-primary transition-colors group"
-              >
-                {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-purple-600 group-hover:w-full transition-all duration-300" />
-              </Link>
-            ))}
+              { href: '/', label: 'Ana Sayfa', Icon: Home },
+              { href: '/kategoriler', label: 'Kategoriler', Icon: Grid3x3 },
+              { href: '/urunler', label: 'Ürünler', Icon: Package },
+            ].map((link) => {
+              const IconComponent = link.Icon
+              return (
+                <Link 
+                  key={link.href}
+                  href={link.href} 
+                  className="group relative px-5 py-2.5 text-sm font-semibold text-gray-700 hover:text-pink-600 transition-all duration-300 rounded-xl hover:bg-pink-50"
+                >
+                  <span className="flex items-center gap-2">
+                    <IconComponent className="w-4 h-4" />
+                    {link.label}
+                  </span>
+                </Link>
+              )
+            })}
           </div>
 
           <div className="flex items-center space-x-2">
@@ -110,21 +115,25 @@ export function Navbar() {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="flex flex-col space-y-4">
+              <div className="flex flex-col space-y-2">
                 {[
-                  { href: '/', label: 'Ana Sayfa' },
-                  { href: '/kategoriler', label: 'Kategoriler' },
-                  { href: '/urunler', label: 'Ürünler' },
-                ].map((link) => (
-                  <Link 
-                    key={link.href}
-                    href={link.href}
-                    className="text-base font-medium text-gray-700 hover:text-primary transition-colors px-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                  { href: '/', label: 'Ana Sayfa', Icon: Home },
+                  { href: '/kategoriler', label: 'Kategoriler', Icon: Grid3x3 },
+                  { href: '/urunler', label: 'Ürünler', Icon: Package },
+                ].map((link) => {
+                  const IconComponent = link.Icon
+                  return (
+                    <Link 
+                      key={link.href}
+                      href={link.href}
+                      className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-gray-700 hover:text-pink-600 hover:bg-pink-50 transition-all rounded-xl"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <IconComponent className="w-5 h-5" />
+                      {link.label}
+                    </Link>
+                  )
+                })}
               </div>
             </motion.div>
           )}
