@@ -86,8 +86,39 @@ npm run dev
 
 ## Deployment
 
-Bu proje Netlify, Vercel veya benzeri platformlara kolayca deploy edilebilir.
+### Netlify'a Deploy (Önerilen)
 
+Bu proje Netlify için optimize edilmiştir. Deploy için:
+
+**Otomatik Deployment:**
+1. GitHub'a push yapın
+2. Netlify GitHub repoyu bağlayın
+3. Build ayarları otomatik tanınır
+4. Deploy!
+
+**Manuel Deployment:**
+```bash
+npm install -g netlify-cli
+netlify login
+netlify deploy --prod
+```
+
+**Gerekli Dosyalar:**
+- ✅ `netlify.toml` - Netlify yapılandırması
+- ✅ `next.config.js` - Next.js yapılandırması
+- ✅ `@netlify/plugin-nextjs` - Otomatik yüklenir
+
+Detaylı bilgi için `DEPLOYMENT.md` dosyasına bakın.
+
+### Diğer Platformlar
+
+**Vercel:**
+```bash
+npm run build
+vercel
+```
+
+**Lokal Production Build:**
 ```bash
 npm run build
 npm start
