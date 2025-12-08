@@ -2,18 +2,21 @@
 
 import { useEffect } from "react"
 import { motion } from "framer-motion"
-import { CheckCircle2, Package, Truck, Home, ArrowRight } from "lucide-react"
+import { CheckCircle2, Package, Truck, Home, ArrowRight, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
 import confetti from "canvas-confetti"
+import { CartItem } from "@/types"
 
 interface OrderSuccessProps {
   orderNumber: string
   totalAmount: number
+  orderItems: CartItem[]
   onNewOrder: () => void
 }
 
-export function OrderSuccess({ orderNumber, totalAmount, onNewOrder }: OrderSuccessProps) {
+export function OrderSuccess({ orderNumber, totalAmount, orderItems, onNewOrder }: OrderSuccessProps) {
   useEffect(() => {
     // Trigger confetti animation
     const duration = 3000
@@ -88,9 +91,9 @@ export function OrderSuccess({ orderNumber, totalAmount, onNewOrder }: OrderSucc
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-gradient-to-r from-pink-50 to-orange-50 rounded-xl p-6 mb-8"
+          className="bg-gradient-to-r from-pink-50 to-orange-50 rounded-xl p-6 mb-6"
         >
-          <div className="grid grid-cols-2 gap-4 text-left">
+          <div className="grid grid-cols-2 gap-4 text-left mb-4">
             <div>
               <p className="text-sm text-gray-600 mb-1">Sipariş Numarası</p>
               <p className="font-bold text-gray-900 font-mono">#{orderNumber}</p>
@@ -105,6 +108,37 @@ export function OrderSuccess({ orderNumber, totalAmount, onNewOrder }: OrderSucc
               </p>
             </div>
           </div>
+
+          {/* Order Items */}
+          {orderItems.length > 0 && (
+            <div className="border-t border-pink-200 pt-4 mt-4">
+              <p className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4" />
+                Sipariş Edilen Ürünler ({orderItems.length})
+              </p>
+              <div className="space-y-3 max-h-48 overflow-y-auto">
+                {orderItems.map((item) => (
+                  <div key={item.id} className="flex items-center gap-3 bg-white/60 rounded-lg p-2">
+                    <div className="relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden">
+                      <Image
+                        src={item.image_url}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
+                      <p className="text-xs text-gray-600">{item.quantity} adet × {item.price.toFixed(2)} ₺</p>
+                    </div>
+                    <div className="text-sm font-bold text-gray-900">
+                      {(item.price * item.quantity).toFixed(2)} ₺
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </motion.div>
 
         {/* Order Steps */}

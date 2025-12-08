@@ -10,6 +10,7 @@ import { toast } from "@/components/ui/toaster"
 import { AddressForm } from "@/components/AddressForm"
 import { PaymentForm } from "@/components/PaymentForm"
 import { OrderSuccess } from "@/components/OrderSuccess"
+import { CartItem } from "@/types"
 
 type CheckoutStep = "cart" | "address" | "payment" | "success"
 
@@ -29,6 +30,8 @@ export default function CartPage() {
   const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>("cart")
   const [addressData, setAddressData] = useState<AddressData | null>(null)
   const [orderNumber, setOrderNumber] = useState("")
+  const [orderTotal, setOrderTotal] = useState(0)
+  const [orderItems, setOrderItems] = useState<CartItem[]>([])
 
   const handleCheckout = () => {
     setCheckoutStep("address")
@@ -43,6 +46,10 @@ export default function CartPage() {
     // Generate order number
     const randomOrderNumber = Math.floor(100000 + Math.random() * 900000).toString()
     setOrderNumber(randomOrderNumber)
+    
+    // Save order details before clearing cart
+    setOrderTotal(totalPrice)
+    setOrderItems([...cart])
     
     // Clear cart
     clearCart()
@@ -61,6 +68,8 @@ export default function CartPage() {
     setCheckoutStep("cart")
     setAddressData(null)
     setOrderNumber("")
+    setOrderTotal(0)
+    setOrderItems([])
   }
 
   const handleRemoveFromCart = (productId: string, productName: string) => {
@@ -103,7 +112,8 @@ export default function CartPage() {
       <div className="container mx-auto px-4 py-8">
         <OrderSuccess
           orderNumber={orderNumber}
-          totalAmount={totalPrice}
+          totalAmount={orderTotal}
+          orderItems={orderItems}
           onNewOrder={handleNewOrder}
         />
       </div>
