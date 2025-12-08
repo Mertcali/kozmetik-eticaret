@@ -29,8 +29,9 @@ CREATE INDEX IF NOT EXISTS idx_products_created_at ON products(created_at);
 CREATE INDEX IF NOT EXISTS idx_subcategories_category ON subcategories(category_id);
 CREATE INDEX IF NOT EXISTS idx_subcategories_slug ON subcategories(slug);
 
--- Step 4: Add trigger for subcategories updated_at
-CREATE TRIGGER IF NOT EXISTS update_subcategories_updated_at BEFORE UPDATE ON subcategories
+-- Step 4: Add trigger for subcategories updated_at (drop first if exists)
+DROP TRIGGER IF EXISTS update_subcategories_updated_at ON subcategories;
+CREATE TRIGGER update_subcategories_updated_at BEFORE UPDATE ON subcategories
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Step 5: Enable RLS for subcategories

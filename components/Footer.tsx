@@ -16,12 +16,19 @@ export function Footer() {
           <div>
             <Link href="/" className="flex items-center space-x-3 mb-6 group">
               <motion.div
-                whileHover={{ rotate: 180, scale: 1.1 }}
+                whileHover={{ scale: 1.1 }}
                 transition={{ duration: 0.3 }}
+                className="relative"
               >
-                <Store className="h-8 w-8 text-blue-500" />
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-orange-500 rounded-lg blur opacity-75"></div>
+                <div className="relative bg-gradient-to-r from-pink-600 to-orange-500 p-2 rounded-lg">
+                  <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 8V6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6V8M5 10H19L20 22H4L5 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M12 14V18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </div>
               </motion.div>
-              <span className="text-2xl font-serif font-bold bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent">
                 PickPrime
               </span>
             </Link>
@@ -66,7 +73,7 @@ export function Footer() {
                 <li key={index}>
                   <Link 
                     href={link.href}
-                    className="hover:text-blue-400 transition-colors hover:translate-x-1 inline-block"
+                    className="hover:text-pink-400 transition-colors hover:translate-x-1 inline-block"
                   >
                     {link.label}
                   </Link>
@@ -89,7 +96,7 @@ export function Footer() {
                 <li key={index}>
                   <Link 
                     href={link.href}
-                    className="hover:text-blue-400 transition-colors hover:translate-x-1 inline-block"
+                    className="hover:text-pink-400 transition-colors hover:translate-x-1 inline-block"
                   >
                     {link.label}
                   </Link>
@@ -103,12 +110,12 @@ export function Footer() {
             <h3 className="text-white font-bold text-lg mb-6">İletişim</h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-blue-500 mt-1 flex-shrink-0" />
+                <Mail className="w-5 h-5 text-pink-500 mt-1 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-gray-400 mb-1">E-posta</p>
                   <a 
                     href="mailto:contactpickprime@gmail.com" 
-                    className="hover:text-blue-400 transition-colors break-all"
+                    className="hover:text-pink-400 transition-colors break-all"
                   >
                     contactpickprime@gmail.com
                   </a>
@@ -129,19 +136,19 @@ export function Footer() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-400">
-              © {currentYear} <span className="text-blue-400 font-semibold">PickPrime LLC</span>. Tüm hakları saklıdır.
+              © {currentYear} <span className="bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent font-semibold">PickPrime LLC</span>. Tüm hakları saklıdır.
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-sm">
-              <Link href="#" className="hover:text-blue-400 transition-colors">
+              <Link href="#" className="hover:text-pink-400 transition-colors">
                 Gizlilik Politikası
               </Link>
-              <Link href="#" className="hover:text-blue-400 transition-colors">
+              <Link href="#" className="hover:text-pink-400 transition-colors">
                 Kullanım Koşulları
               </Link>
-              <Link href="#" className="hover:text-blue-400 transition-colors">
+              <Link href="#" className="hover:text-pink-400 transition-colors">
                 Çerez Politikası
               </Link>
-              <Link href="#" className="hover:text-blue-400 transition-colors">
+              <Link href="#" className="hover:text-pink-400 transition-colors">
                 KVKK
               </Link>
             </div>

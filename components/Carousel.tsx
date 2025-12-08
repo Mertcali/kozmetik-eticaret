@@ -4,44 +4,66 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronLeft, ChevronRight, Sparkles, ArrowRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, Sparkles, ArrowRight, ShoppingBag, TrendingUp, Star } from "lucide-react"
+import { Product } from "@/types"
 
-const SLIDES = [
-  {
-    id: 1,
-    title: "Yaz Kampanyası",
-    description: "Tüm cilt bakım ürünlerinde %25 indirim",
-    image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=2000&h=1200&auto=format&fit=crop&q=90",
-    badge: "Kampanya",
-    gradient: "from-pink-600/90 to-purple-600/90",
-  },
-  {
-    id: 2,
-    title: "Yeni Ürünler",
-    description: "Doğal içerikli yeni sezon koleksiyonu",
-    image: "https://images.unsplash.com/photo-1571875257727-256c39da42af?w=2000&h=1200&auto=format&fit=crop&q=90",
-    badge: "Yeni",
-    gradient: "from-rose-600/90 to-pink-600/90",
-  },
-  {
-    id: 3,
-    title: "Çok Satanlar",
-    description: "En çok tercih edilen ürünlerimiz",
-    image: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=2000&h=1200&auto=format&fit=crop&q=90",
-    badge: "Popüler",
-    gradient: "from-purple-600/90 to-indigo-600/90",
-  },
-]
+interface PromoCarouselProps {
+  featuredProducts?: Product[]
+}
 
-export function PromoCarousel() {
+export function PromoCarousel({ featuredProducts = [] }: PromoCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
+
+  // Create slides from featured products
+  const SLIDES = featuredProducts.length > 0 ? featuredProducts.slice(0, 3).map((product, index) => ({
+    id: product.id,
+    title: index === 0 ? "Öne Çıkan Ürünler" : index === 1 ? "En Çok Satanlar" : "Yeni Gelenler",
+    description: product.name,
+    image: product.image_url,
+    badge: index === 0 ? "Özel" : index === 1 ? "Popüler" : "Yeni",
+    gradient: index === 0 ? "from-pink-600/90 to-orange-600/90" : index === 1 ? "from-orange-600/90 to-pink-600/90" : "from-pink-500/90 to-orange-500/90",
+    price: product.price,
+    oldPrice: product.compare_at_price,
+    slug: product.slug,
+  })) : [
+    {
+      id: "1",
+      title: "Öne Çıkan Ürünler",
+      description: "En popüler ürünlerimizi keşfedin",
+      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=2000&h=1200&auto=format&fit=crop&q=90",
+      badge: "Özel",
+      gradient: "from-pink-600/90 to-orange-600/90",
+      price: 0,
+      slug: "/urunler",
+    },
+    {
+      id: "2",
+      title: "En Çok Satanlar",
+      description: "Müşterilerimizin favorileri",
+      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=2000&h=1200&auto=format&fit=crop&q=90",
+      badge: "Popüler",
+      gradient: "from-orange-600/90 to-pink-600/90",
+      price: 0,
+      slug: "/urunler",
+    },
+    {
+      id: "3",
+      title: "Yeni Gelenler",
+      description: "Yeni ürünlerimize göz atın",
+      image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=2000&h=1200&auto=format&fit=crop&q=90",
+      badge: "Yeni",
+      gradient: "from-pink-500/90 to-orange-500/90",
+      price: 0,
+      slug: "/urunler",
+    },
+  ]
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % SLIDES.length)
-    }, 4000)
+    }, 5000)
     return () => clearInterval(interval)
-  }, [])
+  }, [SLIDES.length])
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index)
@@ -53,6 +75,14 @@ export function PromoCarousel() {
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev - 1 + SLIDES.length) % SLIDES.length)
+  }
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('tr-TR', {
+      style: 'currency',
+      currency: 'TRY',
+      minimumFractionDigits: 2,
+    }).format(price)
   }
 
   return (
@@ -101,21 +131,47 @@ export function PromoCarousel() {
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
-              className="text-xl md:text-2xl text-white mb-8 max-w-2xl drop-shadow-lg font-medium"
+              className="text-xl md:text-2xl text-white mb-4 max-w-2xl drop-shadow-lg font-medium"
             >
               {SLIDES[currentIndex].description}
             </motion.p>
+
+            {SLIDES[currentIndex].price > 0 && (
+              <motion.div
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6, type: "spring", stiffness: 100 }}
+                className="flex items-center gap-4 mb-8"
+              >
+                <span className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+                  {formatPrice(SLIDES[currentIndex].price)}
+                </span>
+                {SLIDES[currentIndex].oldPrice && (
+                  <span className="text-xl md:text-2xl text-white/60 line-through drop-shadow-lg">
+                    {formatPrice(SLIDES[currentIndex].oldPrice)}
+                  </span>
+                )}
+              </motion.div>
+            )}
             
             <motion.div
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.65, type: "spring", stiffness: 100 }}
+              transition={{ delay: 0.7, type: "spring", stiffness: 100 }}
+              className="flex gap-4"
             >
               <Link
-                href="/urunler"
-                className="inline-flex items-center justify-center px-10 py-4 bg-white text-gray-900 font-bold rounded-2xl hover:bg-pink-50 transition-all shadow-2xl hover:shadow-pink-500/50 hover:scale-105 text-lg"
+                href={SLIDES[currentIndex].price > 0 ? `/urun/${SLIDES[currentIndex].slug}` : SLIDES[currentIndex].slug}
+                className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-pink-600 to-orange-500 text-white font-bold rounded-2xl hover:shadow-2xl hover:shadow-pink-500/50 hover:scale-105 transition-all text-lg shadow-xl"
               >
-                Ürünleri İncele
+                <ShoppingBag className="mr-2 h-5 w-5" />
+                {SLIDES[currentIndex].price > 0 ? "Hemen Al" : "Tüm Ürünler"}
+              </Link>
+              <Link
+                href="/urunler"
+                className="inline-flex items-center justify-center px-8 py-4 bg-white/90 backdrop-blur-md text-gray-900 font-bold rounded-2xl hover:bg-white transition-all shadow-xl hover:scale-105 text-lg"
+              >
+                Keşfet
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </motion.div>

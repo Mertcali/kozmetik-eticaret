@@ -35,14 +35,24 @@ export function Navbar() {
         <div className="flex h-20 items-center justify-between">
           <Link href="/" className="flex items-center space-x-3 group">
             <motion.div
-              whileHover={{ rotate: 180, scale: 1.1 }}
+              whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.3 }}
+              className="relative"
             >
-              <Store className="h-7 w-7 text-primary" />
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-orange-500 rounded-lg blur opacity-75 group-hover:opacity-100 transition"></div>
+              <div className="relative bg-gradient-to-r from-pink-600 to-orange-500 p-2 rounded-lg shadow-lg">
+                <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 8V6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6V8M5 10H19L20 22H4L5 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 14V18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </div>
             </motion.div>
-            <span className="text-2xl font-serif font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              ShopHub
-            </span>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-orange-500 bg-clip-text text-transparent leading-none">
+                PickPrime
+              </span>
+              <span className="text-[10px] text-gray-500 font-medium tracking-wide">GLOBAL SHOPPING</span>
+            </div>
           </Link>
 
           <div className="hidden md:flex items-center space-x-1">
@@ -58,7 +68,7 @@ export function Navbar() {
                 <Link 
                   key={link.href}
                   href={link.href} 
-                  className="group relative px-5 py-2.5 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-300 rounded-xl hover:bg-blue-50"
+                  className="group relative px-5 py-2.5 text-sm font-semibold text-gray-700 hover:text-pink-600 transition-all duration-300 rounded-xl hover:bg-pink-50"
                 >
                   <span className="flex items-center gap-2">
                     <IconComponent className="w-4 h-4" />
@@ -83,7 +93,7 @@ export function Navbar() {
                   <AnimatePresence>
                     {totalItems > 0 && (
                       <motion.span 
-                        className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-xs text-white flex items-center justify-center font-bold shadow-lg"
+                        className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-orange-500 text-xs text-white flex items-center justify-center font-bold shadow-lg"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         exit={{ scale: 0 }}
@@ -130,7 +140,7 @@ export function Navbar() {
                     <Link 
                       key={link.href}
                       href={link.href}
-                      className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all rounded-xl"
+                      className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-gray-700 hover:text-pink-600 hover:bg-pink-50 transition-all rounded-xl"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <IconComponent className="w-5 h-5" />
