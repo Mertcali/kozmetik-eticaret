@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ShoppingCart, Search, Sparkles, Menu, X, Home, Grid3x3, Package } from "lucide-react"
+import { ShoppingCart, Search, Store, Menu, X, Home, Grid3x3, Package } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useCart } from "@/contexts/CartContext"
 import { Button } from "@/components/ui/button"
@@ -24,8 +24,8 @@ export function Navbar() {
     <motion.nav 
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/80 backdrop-blur-xl shadow-lg border-b border-pink-100' 
-          : 'bg-white/60 backdrop-blur-md border-b border-transparent'
+          ? 'bg-white/90 backdrop-blur-xl shadow-lg border-b border-gray-200' 
+          : 'bg-white/70 backdrop-blur-md border-b border-transparent'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -38,10 +38,10 @@ export function Navbar() {
               whileHover={{ rotate: 180, scale: 1.1 }}
               transition={{ duration: 0.3 }}
             >
-              <Sparkles className="h-7 w-7 text-primary" />
+              <Store className="h-7 w-7 text-primary" />
             </motion.div>
-            <span className="text-2xl font-serif font-bold bg-gradient-to-r from-pink-500 via-rose-500 to-purple-600 bg-clip-text text-transparent">
-              Güzelliğin Dünyası
+            <span className="text-2xl font-serif font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              ShopHub
             </span>
           </Link>
 
@@ -56,7 +56,7 @@ export function Navbar() {
                 <Link 
                   key={link.href}
                   href={link.href} 
-                  className="group relative px-5 py-2.5 text-sm font-semibold text-gray-700 hover:text-pink-600 transition-all duration-300 rounded-xl hover:bg-pink-50"
+                  className="group relative px-5 py-2.5 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-300 rounded-xl hover:bg-blue-50"
                 >
                   <span className="flex items-center gap-2">
                     <IconComponent className="w-4 h-4" />
@@ -81,7 +81,7 @@ export function Navbar() {
                   <AnimatePresence>
                     {totalItems > 0 && (
                       <motion.span 
-                        className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-xs text-white flex items-center justify-center font-bold shadow-lg"
+                        className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-xs text-white flex items-center justify-center font-bold shadow-lg"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         exit={{ scale: 0 }}
@@ -109,7 +109,7 @@ export function Navbar() {
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
-              className="md:hidden py-4 border-t border-pink-100"
+              className="md:hidden py-4 border-t border-gray-200"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -126,7 +126,7 @@ export function Navbar() {
                     <Link 
                       key={link.href}
                       href={link.href}
-                      className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-gray-700 hover:text-pink-600 hover:bg-pink-50 transition-all rounded-xl"
+                      className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all rounded-xl"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <IconComponent className="w-5 h-5" />

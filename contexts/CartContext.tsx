@@ -1,13 +1,13 @@
 "use client"
 
-import React, { createContext, useContext, useState, ReactNode } from "react"
-import { CartItem, Product } from "@/types"
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react"
+import { CartItem, Product, productToCartItem } from "@/types"
 
 interface CartContextType {
   cart: CartItem[]
-  addToCart: (product: Product) => void
-  removeFromCart: (productId: number) => void
-  updateQuantity: (productId: number, quantity: number) => void
+  addToCart: (product: Product, quantity?: number) => void
+  removeFromCart: (productId: string) => void
+  updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
   totalItems: number
   totalPrice: number
@@ -17,33 +17,56 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([])
+  const [isLoaded, setIsLoaded] = useState(false)
 
-  const addToCart = (product: Product) => {
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    const savedCart = localStorage.getItem('cart')
+    if (savedCart) {
+      try {
+        setCart(JSON.parse(savedCart))
+      } catch (error) {
+        console.error('Error loading cart from localStorage:', error)
+      }
+    }
+    setIsLoaded(true)
+  }, [])
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem('cart', JSON.stringify(cart))
+    }
+  }, [cart, isLoaded])
+
+  const addToCart = (product: Product, quantity: number = 1) => {
     setCart((prev) => {
       const existingItem = prev.find((item) => item.id === product.id)
       if (existingItem) {
         return prev.map((item) =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: Math.min(item.quantity + quantity, product.stock_quantity) }
             : item
         )
       }
-      return [...prev, { ...product, quantity: 1 }]
+      return [...prev, productToCartItem(product, Math.min(quantity, product.stock_quantity))]
     })
   }
 
-  const removeFromCart = (productId: number) => {
+  const removeFromCart = (productId: string) => {
     setCart((prev) => prev.filter((item) => item.id !== productId))
   }
 
-  const updateQuantity = (productId: number, quantity: number) => {
+  const updateQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId)
       return
     }
     setCart((prev) =>
       prev.map((item) =>
-        item.id === productId ? { ...item, quantity } : item
+        item.id === productId 
+          ? { ...item, quantity: Math.min(quantity, item.stock_quantity) } 
+          : item
       )
     )
   }

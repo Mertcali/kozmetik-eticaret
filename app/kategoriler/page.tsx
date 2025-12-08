@@ -3,10 +3,28 @@
 import Link from "next/link"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { categories } from "@/data/products"
 import { fadeInUp, staggerContainer } from "@/lib/animations"
+import { useEffect, useState } from "react"
+import { getCategories } from "@/lib/api"
+import { Category } from "@/types"
 
 export default function CategoriesPage() {
+  const [categories, setCategories] = useState<Category[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const data = await getCategories()
+        setCategories(data)
+      } catch (error) {
+        console.error('Error loading categories:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadCategories()
+  }, [])
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-purple-50">
       <div className="container mx-auto px-4 py-16">
@@ -32,27 +50,35 @@ export default function CategoriesPage() {
           initial="initial"
           animate="animate"
         >
-          {categories.map((category, index) => (
-            <motion.div
-              key={category.id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Link href={`/kategori/${category.id}`}>
-                <motion.div
-                  className="group relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 bg-white"
-                  whileHover={{ y: -12, scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  {/* Image Container */}
-                  <div className="relative aspect-[4/5] overflow-hidden">
-                    <Image
-                      src={category.image}
-                      alt={category.name}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
+          {loading ? (
+            // Loading skeleton
+            Array.from({ length: 8 }).map((_, index) => (
+              <div key={index} className="animate-pulse">
+                <div className="aspect-[4/5] bg-gray-200 rounded-3xl"></div>
+              </div>
+            ))
+          ) : (
+            categories.map((category, index) => (
+              <motion.div
+                key={category.id}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Link href={`/kategori/${category.slug}`}>
+                  <motion.div
+                    className="group relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 bg-white"
+                    whileHover={{ y: -12, scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    {/* Image Container */}
+                    <div className="relative aspect-[4/5] overflow-hidden">
+                      <Image
+                        src={category.image_url || 'https://via.placeholder.com/400'}
+                        alt={category.name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                     
@@ -94,7 +120,8 @@ export default function CategoriesPage() {
                 </motion.div>
               </Link>
             </motion.div>
-          ))}
+          ))
+          )}
         </motion.div>
 
         {/* Bottom CTA */}

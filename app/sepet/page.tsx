@@ -18,7 +18,7 @@ export default function CartPage() {
     })
   }
 
-  const handleRemoveFromCart = (productId: number, productName: string) => {
+  const handleRemoveFromCart = (productId: string, productName: string) => {
     removeFromCart(productId)
     toast({
       title: "Üründen Çıkarıldı",
@@ -58,7 +58,7 @@ export default function CartPage() {
               >
                 <div className="relative w-24 h-24 flex-shrink-0">
                   <Image
-                    src={item.image}
+                    src={item.image_url}
                     alt={item.name}
                     fill
                     className="object-cover rounded"
@@ -66,10 +66,12 @@ export default function CartPage() {
                 </div>
                 
                 <div className="flex-1">
-                  <h3 className="font-medium mb-1">{item.name}</h3>
-                  <p className="text-sm text-gray-500 mb-2">{item.category}</p>
-                  <p className="text-lg font-bold text-primary">
-                    {item.price} ₺
+                  <Link href={`/urun/${item.slug}`} className="hover:text-primary">
+                    <h3 className="font-medium mb-1">{item.name}</h3>
+                  </Link>
+                  <p className="text-sm text-gray-500 mb-2">Stok: {item.stock_quantity} adet</p>
+                  <p className="text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    {item.price.toFixed(2)} ₺
                   </p>
                 </div>
 
