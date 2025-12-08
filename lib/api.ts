@@ -203,10 +203,25 @@ export async function getProducts(filters?: ProductFilters): Promise<Product[]> 
     }
   }
 
-  if (filters?.subcategorySlug && filters?.categorySlug) {
-    const subcategory = await getSubcategoryBySlug(filters.categorySlug, filters.subcategorySlug)
-    if (subcategory) {
-      query = query.eq('subcategory_id', subcategory.id)
+  // Filter by subcategory (works independently or with category)
+  if (filters?.subcategorySlug) {
+    // If categorySlug is provided, get subcategory by both
+    if (filters.categorySlug) {
+      const subcategory = await getSubcategoryBySlug(filters.categorySlug, filters.subcategorySlug)
+      if (subcategory) {
+        query = query.eq('subcategory_id', subcategory.id)
+      }
+    } else {
+      // If only subcategorySlug is provided, query all subcategories and find by slug
+      const { data: subcategories } = await supabase
+        .from('subcategories')
+        .select('id')
+        .eq('slug', filters.subcategorySlug)
+        .limit(1)
+      
+      if (subcategories && subcategories.length > 0) {
+        query = query.eq('subcategory_id', (subcategories[0] as any).id)
+      }
     }
   }
 
