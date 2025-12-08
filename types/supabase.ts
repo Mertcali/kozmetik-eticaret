@@ -274,6 +274,59 @@ export interface Database {
           created_at?: string
         }
       }
+      carousel_banners: {
+        Row: {
+          id: string
+          title: string
+          subtitle: string | null
+          description: string | null
+          image_url: string
+          button_text: string
+          button_link: string
+          badge: string | null
+          gradient_class: string
+          display_order: number
+          is_active: boolean
+          start_date: string | null
+          end_date: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          subtitle?: string | null
+          description?: string | null
+          image_url: string
+          button_text?: string
+          button_link: string
+          badge?: string | null
+          gradient_class?: string
+          display_order?: number
+          is_active?: boolean
+          start_date?: string | null
+          end_date?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          subtitle?: string | null
+          description?: string | null
+          image_url?: string
+          button_text?: string
+          button_link?: string
+          badge?: string | null
+          gradient_class?: string
+          display_order?: number
+          is_active?: boolean
+          start_date?: string | null
+          end_date?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
   }
 }
@@ -284,9 +337,11 @@ export type Subcategory = Database['public']['Tables']['subcategories']['Row']
 export type Product = Database['public']['Tables']['products']['Row']
 export type Order = Database['public']['Tables']['orders']['Row']
 export type OrderItem = Database['public']['Tables']['order_items']['Row']
+export type CarouselBanner = Database['public']['Tables']['carousel_banners']['Row']
 
 export type CategoryInsert = Database['public']['Tables']['categories']['Insert']
 export type SubcategoryInsert = Database['public']['Tables']['subcategories']['Insert']
 export type ProductInsert = Database['public']['Tables']['products']['Insert']
 export type OrderInsert = Database['public']['Tables']['orders']['Insert']
 export type OrderItemInsert = Database['public']['Tables']['order_items']['Insert']
+export type CarouselBannerInsert = Database['public']['Tables']['carousel_banners']['Insert']

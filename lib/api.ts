@@ -1,6 +1,33 @@
 import { supabase } from './supabase'
-import { Product, Category, Subcategory } from '@/types/supabase'
+import { Product, Category, Subcategory, CarouselBanner } from '@/types/supabase'
 import { ProductFilters, SortOption } from '@/types'
+
+// =====================================================
+// CAROUSEL BANNERS
+// =====================================================
+
+/**
+ * Fetch active carousel banners
+ */
+export async function getCarouselBanners(): Promise<CarouselBanner[]> {
+  const now = new Date().toISOString()
+  
+  const { data, error } = await supabase
+    .from('carousel_banners')
+    .select('*')
+    .eq('is_active', true)
+    .or(`start_date.is.null,start_date.lte.${now}`)
+    .or(`end_date.is.null,end_date.gte.${now}`)
+    .order('display_order', { ascending: true })
+    .limit(5)
+
+  if (error) {
+    console.error('Error fetching carousel banners:', error)
+    return []
+  }
+
+  return data || []
+}
 
 // =====================================================
 // CATEGORIES

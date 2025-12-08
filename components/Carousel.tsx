@@ -4,59 +4,72 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronLeft, ChevronRight, Sparkles, ArrowRight, ShoppingBag, TrendingUp, Star } from "lucide-react"
-import { Product } from "@/types"
+import { ChevronLeft, ChevronRight, Sparkles, ArrowRight, ShoppingBag } from "lucide-react"
+import { CarouselBanner } from "@/types/supabase"
 
 interface PromoCarouselProps {
-  featuredProducts?: Product[]
+  banners?: CarouselBanner[]
 }
 
-export function PromoCarousel({ featuredProducts = [] }: PromoCarouselProps) {
+export function PromoCarousel({ banners = [] }: PromoCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  // Create slides from featured products
-  const SLIDES = featuredProducts.length > 0 ? featuredProducts.slice(0, 3).map((product, index) => ({
-    id: product.id,
-    title: index === 0 ? "Öne Çıkan Ürünler" : index === 1 ? "En Çok Satanlar" : "Yeni Gelenler",
-    description: product.name,
-    image: product.image_url,
-    badge: index === 0 ? "Özel" : index === 1 ? "Popüler" : "Yeni",
-    gradient: index === 0 ? "from-pink-600/90 to-orange-600/90" : index === 1 ? "from-orange-600/90 to-pink-600/90" : "from-pink-500/90 to-orange-500/90",
-    price: product.price,
-    oldPrice: product.compare_at_price,
-    slug: product.slug,
-  })) : [
+  // Fallback banners if none provided
+  const FALLBACK_SLIDES = [
     {
       id: "1",
       title: "Öne Çıkan Ürünler",
-      description: "En popüler ürünlerimizi keşfedin",
-      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=2000&h=1200&auto=format&fit=crop&q=90",
+      subtitle: "Sezonun En İyileri",
+      description: "En popüler ve en çok tercih edilen ürünlerimizi keşfedin",
+      image_url: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=2000&h=1200&auto=format&fit=crop&q=90",
+      button_text: "Hemen İncele",
+      button_link: "/urunler",
       badge: "Özel",
-      gradient: "from-pink-600/90 to-orange-600/90",
-      price: 0,
-      slug: "/urunler",
+      gradient_class: "from-pink-600/90 to-orange-600/90",
+      display_order: 1,
+      is_active: true,
+      start_date: null,
+      end_date: null,
+      created_at: "",
+      updated_at: "",
     },
     {
       id: "2",
       title: "En Çok Satanlar",
-      description: "Müşterilerimizin favorileri",
-      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=2000&h=1200&auto=format&fit=crop&q=90",
+      subtitle: "Müşteri Favorileri",
+      description: "Binlerce müşterimizin tercihi olan ürünler",
+      image_url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=2000&h=1200&auto=format&fit=crop&q=90",
+      button_text: "Tüm Ürünler",
+      button_link: "/urunler?sortBy=popular",
       badge: "Popüler",
-      gradient: "from-orange-600/90 to-pink-600/90",
-      price: 0,
-      slug: "/urunler",
+      gradient_class: "from-orange-600/90 to-pink-600/90",
+      display_order: 2,
+      is_active: true,
+      start_date: null,
+      end_date: null,
+      created_at: "",
+      updated_at: "",
     },
     {
       id: "3",
-      title: "Yeni Gelenler",
-      description: "Yeni ürünlerimize göz atın",
-      image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=2000&h=1200&auto=format&fit=crop&q=90",
+      title: "Yeni Koleksiyon",
+      subtitle: "Taze Seçimler",
+      description: "Yeni eklenen ürünlerimize göz atın",
+      image_url: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=2000&h=1200&auto=format&fit=crop&q=90",
+      button_text: "Keşfet",
+      button_link: "/urunler?sortBy=newest",
       badge: "Yeni",
-      gradient: "from-pink-500/90 to-orange-500/90",
-      price: 0,
-      slug: "/urunler",
+      gradient_class: "from-pink-500/90 to-orange-500/90",
+      display_order: 3,
+      is_active: true,
+      start_date: null,
+      end_date: null,
+      created_at: "",
+      updated_at: "",
     },
   ]
+
+  const SLIDES = banners.length > 0 ? banners : FALLBACK_SLIDES
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -77,14 +90,6 @@ export function PromoCarousel({ featuredProducts = [] }: PromoCarouselProps) {
     setCurrentIndex((prev) => (prev - 1 + SLIDES.length) % SLIDES.length)
   }
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('tr-TR', {
-      style: 'currency',
-      currency: 'TRY',
-      minimumFractionDigits: 2,
-    }).format(price)
-  }
-
   return (
     <div className="relative w-full h-[450px] md:h-[550px] rounded-3xl overflow-hidden shadow-2xl group">
       <AnimatePresence mode="wait">
@@ -97,14 +102,14 @@ export function PromoCarousel({ featuredProducts = [] }: PromoCarouselProps) {
           className="absolute inset-0"
         >
           <Image
-            src={SLIDES[currentIndex].image}
+            src={SLIDES[currentIndex].image_url}
             alt={SLIDES[currentIndex].title}
             fill
             className="object-cover"
             priority
             quality={95}
           />
-          <div className={`absolute inset-0 bg-gradient-to-br ${SLIDES[currentIndex].gradient} mix-blend-multiply opacity-40`} />
+          <div className={`absolute inset-0 bg-gradient-to-br ${SLIDES[currentIndex].gradient_class} mix-blend-multiply opacity-40`} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
           
           <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-20 lg:px-24">
@@ -122,37 +127,30 @@ export function PromoCarousel({ featuredProducts = [] }: PromoCarouselProps) {
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.35, type: "spring", stiffness: 100 }}
-              className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white mb-6 drop-shadow-2xl leading-tight"
+              className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-4 drop-shadow-2xl leading-tight"
             >
               {SLIDES[currentIndex].title}
             </motion.h2>
+
+            {SLIDES[currentIndex].subtitle && (
+              <motion.p
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.45, type: "spring", stiffness: 100 }}
+                className="text-2xl md:text-3xl text-white/90 mb-2 drop-shadow-lg font-semibold"
+              >
+                {SLIDES[currentIndex].subtitle}
+              </motion.p>
+            )}
             
             <motion.p
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
-              className="text-xl md:text-2xl text-white mb-4 max-w-2xl drop-shadow-lg font-medium"
+              className="text-xl md:text-2xl text-white mb-8 max-w-2xl drop-shadow-lg font-medium"
             >
               {SLIDES[currentIndex].description}
             </motion.p>
-
-            {SLIDES[currentIndex].price > 0 && (
-              <motion.div
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6, type: "spring", stiffness: 100 }}
-                className="flex items-center gap-4 mb-8"
-              >
-                <span className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
-                  {formatPrice(SLIDES[currentIndex].price)}
-                </span>
-                {SLIDES[currentIndex].oldPrice && (
-                  <span className="text-xl md:text-2xl text-white/60 line-through drop-shadow-lg">
-                    {formatPrice(SLIDES[currentIndex].oldPrice)}
-                  </span>
-                )}
-              </motion.div>
-            )}
             
             <motion.div
               initial={{ y: 30, opacity: 0 }}
@@ -161,17 +159,17 @@ export function PromoCarousel({ featuredProducts = [] }: PromoCarouselProps) {
               className="flex gap-4"
             >
               <Link
-                href={SLIDES[currentIndex].price > 0 ? `/urun/${SLIDES[currentIndex].slug}` : SLIDES[currentIndex].slug}
+                href={SLIDES[currentIndex].button_link}
                 className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-pink-600 to-orange-500 text-white font-bold rounded-2xl hover:shadow-2xl hover:shadow-pink-500/50 hover:scale-105 transition-all text-lg shadow-xl"
               >
                 <ShoppingBag className="mr-2 h-5 w-5" />
-                {SLIDES[currentIndex].price > 0 ? "Hemen Al" : "Tüm Ürünler"}
+                {SLIDES[currentIndex].button_text}
               </Link>
               <Link
                 href="/urunler"
                 className="inline-flex items-center justify-center px-8 py-4 bg-white/90 backdrop-blur-md text-gray-900 font-bold rounded-2xl hover:bg-white transition-all shadow-xl hover:scale-105 text-lg"
               >
-                Keşfet
+                Tümünü Gör
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </motion.div>
