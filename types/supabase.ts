@@ -47,6 +47,41 @@ export interface Database {
           updated_at?: string
         }
       }
+      subcategories: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          description: string | null
+          category_id: string
+          display_order: number
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          description?: string | null
+          category_id: string
+          display_order?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          slug?: string
+          description?: string | null
+          category_id?: string
+          display_order?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
       products: {
         Row: {
           id: string
@@ -58,6 +93,7 @@ export interface Database {
           compare_at_price: number | null
           cost_price: number | null
           category_id: string | null
+          subcategory_id: string | null
           image_url: string
           images: string[] | null
           sku: string | null
@@ -88,6 +124,7 @@ export interface Database {
           compare_at_price?: number | null
           cost_price?: number | null
           category_id?: string | null
+          subcategory_id?: string | null
           image_url: string
           images?: string[] | null
           sku?: string | null
@@ -118,6 +155,7 @@ export interface Database {
           compare_at_price?: number | null
           cost_price?: number | null
           category_id?: string | null
+          subcategory_id?: string | null
           image_url?: string
           images?: string[] | null
           sku?: string | null
@@ -242,11 +280,13 @@ export interface Database {
 
 // Helper types for easier usage
 export type Category = Database['public']['Tables']['categories']['Row']
+export type Subcategory = Database['public']['Tables']['subcategories']['Row']
 export type Product = Database['public']['Tables']['products']['Row']
 export type Order = Database['public']['Tables']['orders']['Row']
 export type OrderItem = Database['public']['Tables']['order_items']['Row']
 
 export type CategoryInsert = Database['public']['Tables']['categories']['Insert']
+export type SubcategoryInsert = Database['public']['Tables']['subcategories']['Insert']
 export type ProductInsert = Database['public']['Tables']['products']['Insert']
 export type OrderInsert = Database['public']['Tables']['orders']['Insert']
 export type OrderItemInsert = Database['public']['Tables']['order_items']['Insert']

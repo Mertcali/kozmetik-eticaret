@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
-import { Product, Category } from '@/types/supabase'
+import { Product, Category, Subcategory } from '@/types/supabase'
+import { ProductFilters, SortOption } from '@/types'
 
 // =====================================================
 // CATEGORIES
@@ -62,18 +63,146 @@ export async function getCategoryById(id: string): Promise<Category | null> {
 }
 
 // =====================================================
+// SUBCATEGORIES
+// =====================================================
+
+/**
+ * Fetch all active subcategories
+ */
+export async function getSubcategories(): Promise<Subcategory[]> {
+  const { data, error } = await supabase
+    .from('subcategories')
+    .select('*')
+    .eq('is_active', true)
+    .order('display_order', { ascending: true })
+
+  if (error) {
+    console.error('Error fetching subcategories:', error)
+    throw error
+  }
+
+  return data || []
+}
+
+/**
+ * Fetch subcategories by category ID
+ */
+export async function getSubcategoriesByCategory(categoryId: string): Promise<Subcategory[]> {
+  const { data, error } = await supabase
+    .from('subcategories')
+    .select('*')
+    .eq('category_id', categoryId)
+    .eq('is_active', true)
+    .order('display_order', { ascending: true })
+
+  if (error) {
+    console.error('Error fetching subcategories:', error)
+    throw error
+  }
+
+  return data || []
+}
+
+/**
+ * Fetch subcategories by category slug
+ */
+export async function getSubcategoriesByCategorySlug(categorySlug: string): Promise<Subcategory[]> {
+  const category = await getCategoryBySlug(categorySlug)
+  if (!category) return []
+  
+  return getSubcategoriesByCategory(category.id)
+}
+
+/**
+ * Fetch a single subcategory by slug and category
+ */
+export async function getSubcategoryBySlug(categorySlug: string, subcategorySlug: string): Promise<Subcategory | null> {
+  const category = await getCategoryBySlug(categorySlug)
+  if (!category) return null
+
+  const { data, error } = await supabase
+    .from('subcategories')
+    .select('*')
+    .eq('category_id', category.id)
+    .eq('slug', subcategorySlug)
+    .eq('is_active', true)
+    .single()
+
+  if (error) {
+    console.error('Error fetching subcategory:', error)
+    return null
+  }
+
+  return data
+}
+
+// =====================================================
 // PRODUCTS
 // =====================================================
 
 /**
- * Fetch all active products
+ * Apply sorting to a query
  */
-export async function getProducts(): Promise<Product[]> {
-  const { data, error } = await supabase
+function applySorting(query: any, sortBy?: SortOption) {
+  switch (sortBy) {
+    case 'price-asc':
+      return query.order('price', { ascending: true })
+    case 'price-desc':
+      return query.order('price', { ascending: false })
+    case 'popular':
+      return query.order('sales_count', { ascending: false })
+    case 'rating':
+      return query.order('rating', { ascending: false })
+    case 'newest':
+    default:
+      return query.order('created_at', { ascending: false })
+  }
+}
+
+/**
+ * Fetch all active products with optional filters
+ */
+export async function getProducts(filters?: ProductFilters): Promise<Product[]> {
+  let query = supabase
     .from('products')
     .select('*')
     .eq('is_active', true)
-    .order('created_at', { ascending: false })
+
+  // Apply filters
+  if (filters?.categorySlug) {
+    const category = await getCategoryBySlug(filters.categorySlug)
+    if (category) {
+      query = query.eq('category_id', category.id)
+    }
+  }
+
+  if (filters?.subcategorySlug && filters?.categorySlug) {
+    const subcategory = await getSubcategoryBySlug(filters.categorySlug, filters.subcategorySlug)
+    if (subcategory) {
+      query = query.eq('subcategory_id', subcategory.id)
+    }
+  }
+
+  if (filters?.minPrice !== undefined) {
+    query = query.gte('price', filters.minPrice)
+  }
+
+  if (filters?.maxPrice !== undefined) {
+    query = query.lte('price', filters.maxPrice)
+  }
+
+  if (filters?.inStock) {
+    query = query.gt('stock_quantity', 0)
+  }
+
+  if (filters?.search) {
+    query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`)
+  }
+
+  // Apply sorting
+  query = applySorting(query, filters?.sortBy)
+
+  const { data, error } = await query
 
   if (error) {
     console.error('Error fetching products:', error)

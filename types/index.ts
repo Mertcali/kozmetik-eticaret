@@ -1,7 +1,7 @@
-import { Product as SupabaseProduct, Category as SupabaseCategory } from './supabase'
+import { Product as SupabaseProduct, Category as SupabaseCategory, Subcategory as SupabaseSubcategory } from './supabase'
 
 // Re-export Supabase types
-export type { Product, Category, Order, OrderItem } from './supabase'
+export type { Product, Category, Subcategory, Order, OrderItem } from './supabase'
 
 // Extended types for cart functionality
 export interface CartItem {
@@ -12,6 +12,19 @@ export interface CartItem {
   quantity: number
   slug: string
   stock_quantity: number
+}
+
+// Filter and sort types
+export type SortOption = 'newest' | 'price-asc' | 'price-desc' | 'popular' | 'rating'
+
+export interface ProductFilters {
+  categorySlug?: string
+  subcategorySlug?: string
+  minPrice?: number
+  maxPrice?: number
+  inStock?: boolean
+  search?: string
+  sortBy?: SortOption
 }
 
 // Helper function to convert Supabase Product to CartItem
