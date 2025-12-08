@@ -24,13 +24,13 @@ export function Toast({ title, description, type = "success", onClose }: ToastPr
   const colors = {
     success: "from-green-500 to-emerald-600",
     error: "from-red-500 to-rose-600",
-    info: "from-blue-500 to-indigo-600",
+    info: "from-pink-500 to-orange-500",
   }
 
   const bgColors = {
     success: "from-green-50 to-emerald-50",
     error: "from-red-50 to-rose-50",
-    info: "from-blue-50 to-indigo-50",
+    info: "from-pink-50 to-orange-50",
   }
 
   const Icon = icons[type]

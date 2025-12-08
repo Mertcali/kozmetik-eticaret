@@ -118,7 +118,7 @@ export function ProductCard({ product }: ProductCardProps) {
                   {product.compare_at_price.toFixed(2)} ₺
                 </span>
               )}
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-orange-500 bg-clip-text text-transparent">
                 {product.price.toFixed(2)} ₺
               </span>
             </div>

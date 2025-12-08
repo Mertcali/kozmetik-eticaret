@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { ShoppingCart, Search, Store, Menu, X, Home, Grid3x3, Package } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useCart } from "@/contexts/CartContext"
@@ -35,16 +36,18 @@ export function Navbar() {
         <div className="flex h-20 items-center justify-between">
           <Link href="/" className="flex items-center space-x-3 group">
             <motion.div
-              whileHover={{ scale: 1.1 }}
+              whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
               className="relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-orange-500 rounded-lg blur opacity-75 group-hover:opacity-100 transition"></div>
-              <div className="relative bg-gradient-to-r from-pink-600 to-orange-500 p-2 rounded-lg shadow-lg">
-                <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16 8V6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6V8M5 10H19L20 22H4L5 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M12 14V18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
+              <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-lg ring-2 ring-pink-500/20 group-hover:ring-pink-500/40 transition-all">
+                <Image
+                  src="/images/pickprime.jpeg"
+                  alt="PickPrime Logo"
+                  fill
+                  className="object-cover"
+                  priority
+                />
               </div>
             </motion.div>
             <div className="flex flex-col">

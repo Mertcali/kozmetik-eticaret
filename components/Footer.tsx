@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { Store, Mail, Facebook, Twitter, Instagram, Linkedin, Github } from "lucide-react"
 
@@ -16,16 +17,17 @@ export function Footer() {
           <div>
             <Link href="/" className="flex items-center space-x-3 mb-6 group">
               <motion.div
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
                 className="relative"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-orange-500 rounded-lg blur opacity-75"></div>
-                <div className="relative bg-gradient-to-r from-pink-600 to-orange-500 p-2 rounded-lg">
-                  <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M16 8V6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6V8M5 10H19L20 22H4L5 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M12 14V18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
+                <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-lg ring-2 ring-pink-500/20 group-hover:ring-pink-500/40 transition-all">
+                  <Image
+                    src="/images/pickprime.jpeg"
+                    alt="PickPrime Logo"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
               </motion.div>
               <span className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent">

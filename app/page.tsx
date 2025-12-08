@@ -9,23 +9,26 @@ import { Button } from "@/components/ui/button"
 import { fadeInUp, fadeIn, slideInLeft, slideInRight, staggerContainer } from "@/lib/animations"
 import { PromoCarousel } from "@/components/Carousel"
 import { useEffect, useState } from "react"
-import { getCategories, getFeaturedProducts } from "@/lib/api"
-import { Product, Category } from "@/types"
+import { getCategories, getFeaturedProducts, getCarouselBanners } from "@/lib/api"
+import { Product, Category, CarouselBanner } from "@/types"
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
+  const [carouselBanners, setCarouselBanners] = useState<CarouselBanner[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [productsData, categoriesData] = await Promise.all([
+        const [productsData, categoriesData, bannersData] = await Promise.all([
           getFeaturedProducts(),
           getCategories(),
+          getCarouselBanners(),
         ])
         setFeaturedProducts(productsData)
         setCategories(categoriesData)
+        setCarouselBanners(bannersData)
       } catch (error) {
         console.error('Error loading data:', error)
       } finally {
@@ -215,7 +218,7 @@ export default function Home() {
       {/* Promotions Carousel */}
       <section className="py-16 gradient-bg">
         <div className="container mx-auto px-4">
-          <PromoCarousel featuredProducts={featuredProducts} />
+          <PromoCarousel banners={carouselBanners} />
         </div>
       </section>
 

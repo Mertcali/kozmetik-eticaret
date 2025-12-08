@@ -1,21 +1,66 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react"
 import { useCart } from "@/contexts/CartContext"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/toaster"
+import { AddressForm } from "@/components/AddressForm"
+import { PaymentForm } from "@/components/PaymentForm"
+import { OrderSuccess } from "@/components/OrderSuccess"
+
+type CheckoutStep = "cart" | "address" | "payment" | "success"
+
+interface AddressData {
+  fullName: string
+  email: string
+  phone: string
+  address: string
+  city: string
+  district: string
+  postalCode: string
+  addressTitle: string
+}
 
 export default function CartPage() {
-  const { cart, updateQuantity, removeFromCart, totalPrice } = useCart()
+  const { cart, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart()
+  const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>("cart")
+  const [addressData, setAddressData] = useState<AddressData | null>(null)
+  const [orderNumber, setOrderNumber] = useState("")
 
   const handleCheckout = () => {
+    setCheckoutStep("address")
+  }
+
+  const handleAddressSubmit = (data: AddressData) => {
+    setAddressData(data)
+    setCheckoutStep("payment")
+  }
+
+  const handlePaymentSubmit = () => {
+    // Generate order number
+    const randomOrderNumber = Math.floor(100000 + Math.random() * 900000).toString()
+    setOrderNumber(randomOrderNumber)
+    
+    // Clear cart
+    clearCart()
+    
+    // Show success page
+    setCheckoutStep("success")
+    
     toast({
-      title: "Satın Alma Yakında!",
-      description: "Ödeme sistemi entegrasyonu üzerinde çalışıyoruz. Çok yakında sizlerle!",
-      type: "info",
+      title: "Ödeme Başarılı!",
+      description: `Siparişiniz başarıyla oluşturuldu. Sipariş no: #${randomOrderNumber}`,
+      type: "success",
     })
+  }
+
+  const handleNewOrder = () => {
+    setCheckoutStep("cart")
+    setAddressData(null)
+    setOrderNumber("")
   }
 
   const handleRemoveFromCart = (productId: string, productName: string) => {
@@ -27,6 +72,45 @@ export default function CartPage() {
     })
   }
 
+  // Show address form
+  if (checkoutStep === "address") {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <AddressForm
+          onSubmit={handleAddressSubmit}
+          onBack={() => setCheckoutStep("cart")}
+        />
+      </div>
+    )
+  }
+
+  // Show payment form
+  if (checkoutStep === "payment") {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <PaymentForm
+          amount={totalPrice}
+          onSubmit={handlePaymentSubmit}
+          onBack={() => setCheckoutStep("address")}
+        />
+      </div>
+    )
+  }
+
+  // Show success page
+  if (checkoutStep === "success") {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <OrderSuccess
+          orderNumber={orderNumber}
+          totalAmount={totalPrice}
+          onNewOrder={handleNewOrder}
+        />
+      </div>
+    )
+  }
+
+  // Show empty cart
   if (cart.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16">
@@ -70,7 +154,7 @@ export default function CartPage() {
                     <h3 className="font-medium mb-1">{item.name}</h3>
                   </Link>
                   <p className="text-sm text-gray-500 mb-2">Stok: {item.stock_quantity} adet</p>
-                  <p className="text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  <p className="text-lg font-bold bg-gradient-to-r from-pink-600 to-orange-500 bg-clip-text text-transparent">
                     {item.price.toFixed(2)} ₺
                   </p>
                 </div>
