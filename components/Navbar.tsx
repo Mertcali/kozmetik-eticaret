@@ -50,6 +50,8 @@ export function Navbar() {
               { href: '/', label: 'Ana Sayfa', Icon: Home },
               { href: '/kategoriler', label: 'Kategoriler', Icon: Grid3x3 },
               { href: '/urunler', label: 'Ürünler', Icon: Package },
+              { href: '/hakkimizda', label: 'Hakkımızda', Icon: Package },
+              { href: '/iletisim', label: 'İletişim', Icon: Package },
             ].map((link) => {
               const IconComponent = link.Icon
               return (
@@ -120,6 +122,8 @@ export function Navbar() {
                   { href: '/', label: 'Ana Sayfa', Icon: Home },
                   { href: '/kategoriler', label: 'Kategoriler', Icon: Grid3x3 },
                   { href: '/urunler', label: 'Ürünler', Icon: Package },
+                  { href: '/hakkimizda', label: 'Hakkımızda', Icon: Package },
+                  { href: '/iletisim', label: 'İletişim', Icon: Package },
                 ].map((link) => {
                   const IconComponent = link.Icon
                   return (

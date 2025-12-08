@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Inter, Playfair_Display } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "@/components/Navbar"
+import { Footer } from "@/components/Footer"
 import { CartProvider } from "@/contexts/CartContext"
 import { Toaster } from "@/components/ui/toaster"
 
@@ -18,8 +19,8 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: "Güzellik Dünyası - Modern Kozmetik E-Ticaret",
-  description: "En kaliteli kozmetik ürünleri keşfedin",
+  title: "PickPrime - Global E-Commerce Platform",
+  description: "Dünyanın dört bir yanından kaliteli ürünler - Elektronik, Moda, Ev & Yaşam ve daha fazlası",
 }
 
 export default function RootLayout({
@@ -35,6 +36,7 @@ export default function RootLayout({
           <main className="min-h-screen">
             {children}
           </main>
+          <Footer />
           <Toaster />
         </CartProvider>
       </body>
