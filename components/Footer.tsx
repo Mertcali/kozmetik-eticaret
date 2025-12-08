@@ -26,7 +26,9 @@ export function Footer() {
                     src="/images/pickprime.jpeg"
                     alt="PickPrime Logo"
                     fill
+                    sizes="40px"
                     className="object-cover"
+                    unoptimized
                   />
                 </div>
               </motion.div>

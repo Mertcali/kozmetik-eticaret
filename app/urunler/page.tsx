@@ -2,18 +2,21 @@
 
 import { ProductCard } from "@/components/ProductCard"
 import ProductFilters from "@/components/ProductFilters"
+import { CategoryMenu } from "@/components/CategoryMenu"
 import SearchBar from "@/components/SearchBar"
 import { useEffect, useState } from "react"
-import { getProducts, getSubcategories } from "@/lib/api"
-import { Product, Subcategory, SortOption } from "@/types"
+import { getProducts, getSubcategories, getCategories } from "@/lib/api"
+import { Product, Subcategory, Category, SortOption } from "@/types"
 import { motion } from "framer-motion"
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [subcategories, setSubcategories] = useState<Subcategory[]>([])
   const [loading, setLoading] = useState(true)
 
   // Filter states
+  const [selectedCategory, setSelectedCategory] = useState<string>()
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>()
   const [minPrice, setMinPrice] = useState<number>()
   const [maxPrice, setMaxPrice] = useState<number>()
@@ -24,8 +27,9 @@ export default function ProductsPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const [productsData, subcategoriesData] = await Promise.all([
+        const [productsData, subcategoriesData, categoriesData] = await Promise.all([
           getProducts({
+            categorySlug: selectedCategory,
             subcategorySlug: selectedSubcategory,
             minPrice,
             maxPrice,
@@ -34,9 +38,11 @@ export default function ProductsPage() {
             search: searchQuery,
           }),
           getSubcategories(),
+          getCategories(),
         ])
         setProducts(productsData)
         setSubcategories(subcategoriesData)
+        setCategories(categoriesData)
       } catch (error) {
         console.error('Error loading data:', error)
       } finally {
@@ -44,9 +50,10 @@ export default function ProductsPage() {
       }
     }
     loadData()
-  }, [selectedSubcategory, minPrice, maxPrice, inStock, sortBy, searchQuery])
+  }, [selectedCategory, selectedSubcategory, minPrice, maxPrice, inStock, sortBy, searchQuery])
 
   const handleClearFilters = () => {
+    setSelectedCategory(undefined)
     setSelectedSubcategory(undefined)
     setMinPrice(undefined)
     setMaxPrice(undefined)
@@ -92,15 +99,29 @@ export default function ProductsPage() {
         </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters Sidebar */}
+          {/* Category Menu Sidebar */}
           <motion.aside
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
-            className="lg:w-64 flex-shrink-0"
+            className="lg:w-72 flex-shrink-0 space-y-6"
           >
-            <ProductFilters
+            {/* Category Menu */}
+            <CategoryMenu
+              categories={categories}
               subcategories={subcategories}
+              onCategorySelect={(slug) => {
+                setSelectedCategory(slug)
+                setSelectedSubcategory(undefined)
+              }}
+              onSubcategorySelect={(slug) => {
+                setSelectedSubcategory(slug)
+              }}
+            />
+
+            {/* Additional Filters */}
+            <ProductFilters
+              subcategories={[]}
               selectedSubcategory={selectedSubcategory}
               minPrice={minPrice}
               maxPrice={maxPrice}

@@ -45,8 +45,10 @@ export function Navbar() {
                   src="/images/pickprime.jpeg"
                   alt="PickPrime Logo"
                   fill
+                  sizes="48px"
                   className="object-cover"
                   priority
+                  unoptimized
                 />
               </div>
             </motion.div>
