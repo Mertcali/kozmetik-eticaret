@@ -24,32 +24,45 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState<SortOption>('newest')
   const [searchQuery, setSearchQuery] = useState('')
 
+  // Load categories and subcategories only once on mount
   useEffect(() => {
-    async function loadData() {
+    async function loadStaticData() {
       try {
-        const [productsData, subcategoriesData, categoriesData] = await Promise.all([
-          getProducts({
-            categorySlug: selectedCategory,
-            subcategorySlug: selectedSubcategory,
-            minPrice,
-            maxPrice,
-            inStock,
-            sortBy,
-            search: searchQuery,
-          }),
+        const [subcategoriesData, categoriesData] = await Promise.all([
           getSubcategories(),
           getCategories(),
         ])
-        setProducts(productsData)
         setSubcategories(subcategoriesData)
         setCategories(categoriesData)
       } catch (error) {
-        console.error('Error loading data:', error)
+        console.error('Error loading categories:', error)
+      }
+    }
+    loadStaticData()
+  }, []) // Empty dependency array - run only once
+
+  // Load products based on filters
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        setLoading(true)
+        const productsData = await getProducts({
+          categorySlug: selectedCategory,
+          subcategorySlug: selectedSubcategory,
+          minPrice,
+          maxPrice,
+          inStock,
+          sortBy,
+          search: searchQuery,
+        })
+        setProducts(productsData)
+      } catch (error) {
+        console.error('Error loading products:', error)
       } finally {
         setLoading(false)
       }
     }
-    loadData()
+    loadProducts()
   }, [selectedCategory, selectedSubcategory, minPrice, maxPrice, inStock, sortBy, searchQuery])
 
   const handleClearFilters = () => {
@@ -98,26 +111,28 @@ export default function ProductsPage() {
           />
         </motion.div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8 relative">
           {/* Category Menu Sidebar */}
           <motion.aside
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
-            className="lg:w-72 flex-shrink-0 space-y-6"
+            className="lg:w-72 flex-shrink-0 space-y-6 relative z-10"
           >
             {/* Category Menu */}
-            <CategoryMenu
-              categories={categories}
-              subcategories={subcategories}
-              onCategorySelect={(slug) => {
-                setSelectedCategory(slug)
-                setSelectedSubcategory(undefined)
-              }}
-              onSubcategorySelect={(slug) => {
-                setSelectedSubcategory(slug)
-              }}
-            />
+            <div className="sticky top-24">
+              <CategoryMenu
+                categories={categories}
+                subcategories={subcategories}
+                onCategorySelect={(slug) => {
+                  setSelectedCategory(slug)
+                  setSelectedSubcategory(undefined)
+                }}
+                onSubcategorySelect={(slug) => {
+                  setSelectedSubcategory(slug)
+                }}
+              />
+            </div>
 
             {/* Additional Filters */}
             <ProductFilters

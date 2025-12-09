@@ -94,12 +94,15 @@ export async function getCategoryById(id: string): Promise<Category | null> {
 // =====================================================
 
 /**
- * Fetch all active subcategories
+ * Fetch all active subcategories with product counts
  */
 export async function getSubcategories(): Promise<Subcategory[]> {
   const { data, error } = await supabase
     .from('subcategories')
-    .select('*')
+    .select(`
+      *,
+      product_count:products(count)
+    `)
     .eq('is_active', true)
     .order('display_order', { ascending: true })
 
@@ -108,7 +111,13 @@ export async function getSubcategories(): Promise<Subcategory[]> {
     throw error
   }
 
-  return data || []
+  // Transform the data to include product_count as a number
+  const subcategoriesWithCount = (data || []).map((sub: any) => ({
+    ...sub,
+    product_count: Array.isArray(sub.product_count) ? sub.product_count[0]?.count || 0 : 0
+  }))
+
+  return subcategoriesWithCount as Subcategory[]
 }
 
 /**

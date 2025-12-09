@@ -1,7 +1,12 @@
 import { Product as SupabaseProduct, Category as SupabaseCategory, Subcategory as SupabaseSubcategory } from './supabase'
 
 // Re-export Supabase types
-export type { Product, Category, Subcategory, Order, OrderItem } from './supabase'
+export type { Product, Category, Order, OrderItem } from './supabase'
+
+// Extended Subcategory with product count
+export interface Subcategory extends SupabaseSubcategory {
+  product_count?: number
+}
 
 // Extended types for cart functionality
 export interface CartItem {
