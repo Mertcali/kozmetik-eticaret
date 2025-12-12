@@ -61,7 +61,7 @@ export default function ProductFilters({
       <div className="lg:hidden mb-4 flex gap-2">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          className="flex items-center justify-center gap-2 px-4 py-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors min-w-0 flex-shrink-0"
         >
           <Filter className="w-5 h-5" />
           <span className="font-medium">Filtreler</span>
@@ -75,7 +75,7 @@ export default function ProductFilters({
         <select
           value={sortBy || 'newest'}
           onChange={(e) => onSortChange(e.target.value as SortOption)}
-          className="px-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+          className="px-3 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm min-w-0 flex-1"
         >
           {sortOptions.map((option) => (
             <option key={option.value} value={option.value}>

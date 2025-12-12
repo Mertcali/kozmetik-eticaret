@@ -88,8 +88,9 @@ function CategoryMenuComponent({
                   // On mobile (touch devices), toggle submenu on click
                   if (hasSubcategories && window.innerWidth < 1024) {
                     e.preventDefault()
+                    // Toggle: if already clicked, close it; otherwise open it
                     setClickedCategory(clickedCategory === category.id ? null : category.id)
-                  } else if (onCategorySelect) {
+                  } else if (onCategorySelect && !hasSubcategories) {
                     // On desktop without subcategories, navigate
                     onCategorySelect(category.slug)
                     setHoveredCategory(null)

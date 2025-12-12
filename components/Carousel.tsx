@@ -156,21 +156,21 @@ export function PromoCarousel({ banners = [] }: PromoCarouselProps) {
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.7, type: "spring", stiffness: 100 }}
-              className="flex gap-4"
+              className="flex flex-col md:flex-row gap-3 md:gap-4 w-full md:w-auto"
             >
               <Link
                 href={SLIDES[currentIndex].button_link}
-                className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-pink-600 to-orange-500 text-white font-bold rounded-2xl hover:shadow-2xl hover:shadow-pink-500/50 hover:scale-105 transition-all text-lg shadow-xl"
+                className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-pink-600 to-orange-500 text-white font-bold rounded-2xl hover:shadow-2xl hover:shadow-pink-500/50 hover:scale-105 transition-all text-base md:text-lg shadow-xl"
               >
-                <ShoppingBag className="mr-2 h-5 w-5" />
+                <ShoppingBag className="mr-2 h-4 md:h-5 w-4 md:w-5" />
                 {SLIDES[currentIndex].button_text}
               </Link>
               <Link
                 href="/urunler"
-                className="inline-flex items-center justify-center px-8 py-4 bg-white/90 backdrop-blur-md text-gray-900 font-bold rounded-2xl hover:bg-white transition-all shadow-xl hover:scale-105 text-lg"
+                className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 bg-white/90 backdrop-blur-md text-gray-900 font-bold rounded-2xl hover:bg-white transition-all shadow-xl hover:scale-105 text-base md:text-lg"
               >
                 Tümünü Gör
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-4 md:h-5 w-4 md:w-5" />
               </Link>
             </motion.div>
           </div>
@@ -195,7 +195,7 @@ export function PromoCarousel({ banners = [] }: PromoCarouselProps) {
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 md:gap-3 z-20">
+      <div className="absolute bottom-16 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 md:gap-3 z-30">
         {SLIDES.map((_, index) => (
           <button
             key={index}
