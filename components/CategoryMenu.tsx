@@ -21,7 +21,20 @@ function CategoryMenuComponent({
 }: CategoryMenuProps) {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null)
   const [clickedCategory, setClickedCategory] = useState<string | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Detect mobile/desktop on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -32,8 +45,9 @@ function CategoryMenuComponent({
     }
   }, [])
 
-  // Determine which category should show submenu (hover for desktop, click for mobile)
-  const activeCategory = hoveredCategory || clickedCategory
+  // Determine which category should show submenu
+  // On mobile: only use click, on desktop: use hover or click
+  const activeCategory = isMobile ? clickedCategory : (hoveredCategory || clickedCategory)
 
   // Get subcategories for a specific category (only with products)
   const getSubcategoriesForCategory = useMemo(() => {
@@ -69,24 +83,30 @@ function CategoryMenuComponent({
               key={category.id}
               className="relative group/category"
               onMouseEnter={() => {
-                // Clear any existing timeout
-                if (hoverTimeoutRef.current) {
-                  clearTimeout(hoverTimeoutRef.current)
+                // Only handle hover on desktop
+                if (!isMobile) {
+                  // Clear any existing timeout
+                  if (hoverTimeoutRef.current) {
+                    clearTimeout(hoverTimeoutRef.current)
+                  }
+                  setHoveredCategory(category.id)
                 }
-                setHoveredCategory(category.id)
               }}
               onMouseLeave={() => {
-                // Delay hiding to allow moving to submenu
-                hoverTimeoutRef.current = setTimeout(() => {
-                  setHoveredCategory(null)
-                }, 200)
+                // Only handle hover on desktop
+                if (!isMobile) {
+                  // Delay hiding to allow moving to submenu
+                  hoverTimeoutRef.current = setTimeout(() => {
+                    setHoveredCategory(null)
+                  }, 200)
+                }
               }}
             >
               <div
                 className="flex items-center justify-between px-4 py-3 hover:bg-pink-50 transition-colors cursor-pointer"
                 onClick={(e) => {
                   // On mobile (touch devices), toggle submenu on click
-                  if (hasSubcategories && window.innerWidth < 1024) {
+                  if (hasSubcategories && isMobile) {
                     e.preventDefault()
                     // Toggle: if already clicked, close it; otherwise open it
                     setClickedCategory(clickedCategory === category.id ? null : category.id)
@@ -95,9 +115,6 @@ function CategoryMenuComponent({
                     onCategorySelect(category.slug)
                     setHoveredCategory(null)
                     setClickedCategory(null)
-                    if (hoverTimeoutRef.current) {
-                      clearTimeout(hoverTimeoutRef.current)
-                    }
                   }
                 }}
               >

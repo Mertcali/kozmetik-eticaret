@@ -156,7 +156,7 @@ export function PromoCarousel({ banners = [] }: PromoCarouselProps) {
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.7, type: "spring", stiffness: 100 }}
-              className="flex flex-col md:flex-row gap-3 md:gap-4 w-full md:w-auto"
+              className="flex flex-col md:flex-row gap-3 md:gap-4 w-full md:w-auto mb-10 md:mb-0"
             >
               <Link
                 href={SLIDES[currentIndex].button_link}
@@ -195,7 +195,7 @@ export function PromoCarousel({ banners = [] }: PromoCarouselProps) {
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-16 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 md:gap-3 z-30">
+      <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 md:gap-3 z-10">
         {SLIDES.map((_, index) => (
           <button
             key={index}
