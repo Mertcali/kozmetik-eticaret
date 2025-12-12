@@ -180,22 +180,22 @@ export function PromoCarousel({ banners = [] }: PromoCarouselProps) {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/90 backdrop-blur-md hover:bg-white flex items-center justify-center transition-all shadow-xl hover:shadow-2xl hover:scale-110 z-10 opacity-0 group-hover:opacity-100"
+        className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/90 backdrop-blur-md hover:bg-white flex items-center justify-center transition-all shadow-xl hover:shadow-2xl hover:scale-110 z-20 opacity-0 group-hover:opacity-100"
         aria-label="Önceki"
       >
-        <ChevronLeft className="w-7 h-7 text-gray-900" />
+        <ChevronLeft className="w-5 h-5 md:w-7 md:h-7 text-gray-900" />
       </button>
       
       <button
         onClick={nextSlide}
-        className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/90 backdrop-blur-md hover:bg-white flex items-center justify-center transition-all shadow-xl hover:shadow-2xl hover:scale-110 z-10 opacity-0 group-hover:opacity-100"
+        className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/90 backdrop-blur-md hover:bg-white flex items-center justify-center transition-all shadow-xl hover:shadow-2xl hover:scale-110 z-20 opacity-0 group-hover:opacity-100"
         aria-label="Sonraki"
       >
-        <ChevronRight className="w-7 h-7 text-gray-900" />
+        <ChevronRight className="w-5 h-5 md:w-7 md:h-7 text-gray-900" />
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+      <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 md:gap-3 z-20">
         {SLIDES.map((_, index) => (
           <button
             key={index}

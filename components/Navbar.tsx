@@ -34,30 +34,34 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
-          <Link href="/" className="flex items-center space-x-3 group">
+          <Link href="/" className="flex items-center group">
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.08, rotate: 2 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.3, type: "spring", stiffness: 400 }}
               className="relative"
             >
-              <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-lg ring-2 ring-pink-500/20 group-hover:ring-pink-500/40 transition-all">
+              {/* Gradient Background Circle */}
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-orange-500/10 to-pink-500/10 rounded-full blur-xl group-hover:from-pink-500/20 group-hover:via-orange-500/20 group-hover:to-pink-500/20 transition-all duration-500"></div>
+              
+              {/* Logo Container */}
+              <div className="relative w-20 h-20 rounded-full overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-300">
                 <Image
                   src="/images/pickprime.jpeg"
-                  alt="PickPrime Logo"
+                  alt="PickPrime"
                   fill
-                  sizes="48px"
+                  sizes="80px"
                   className="object-cover"
                   priority
                   unoptimized
                 />
+                {/* Gradient Overlay on Hover */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-pink-600/0 via-transparent to-orange-600/0 group-hover:from-pink-600/10 group-hover:to-orange-600/10 transition-all duration-500"></div>
               </div>
+              
+              {/* Pulse Animation Ring - Only on Hover */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-pink-500 to-orange-500 rounded-full opacity-0 group-hover:opacity-20 blur-lg transition-all duration-500"></div>
             </motion.div>
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-orange-500 bg-clip-text text-transparent leading-none">
-                PickPrime
-              </span>
-              <span className="text-[10px] text-gray-500 font-medium tracking-wide">GLOBAL SHOPPING</span>
-            </div>
           </Link>
 
           <div className="hidden md:flex items-center space-x-1">

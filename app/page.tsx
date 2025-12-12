@@ -102,7 +102,7 @@ export default function Home() {
                   href="/kategoriler"
                   className="inline-flex items-center justify-center h-14 px-12 rounded-2xl text-base font-semibold transition-all duration-300 border-2 border-pink-300 text-gray-800 hover:bg-pink-50 hover:border-pink-400 hover:scale-105"
                 >
-                  Kategorileri Keşet
+                  Kategorileri Keşfet
                 </Link>
               </motion.div>
             </motion.div>
@@ -154,6 +154,33 @@ export default function Home() {
             className="absolute bottom-20 left-20 w-96 h-96 bg-orange-200 rounded-full blur-3xl opacity-20 animate-pulse pointer-events-none"
             style={{ animationDelay: '1s' }}
           />
+      </section>
+
+      {/* New Year Promotions Carousel */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <PromoCarousel banners={carouselBanners} />
+          <motion.div 
+            className="text-center mt-6"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
+            <div className="inline-flex flex-col md:flex-row items-center gap-2 md:gap-4 bg-gradient-to-r from-pink-50 to-orange-50 px-6 py-3 rounded-2xl border border-pink-200 shadow-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🎉</span>
+                <p className="text-sm md:text-base font-semibold text-gray-800">
+                  Yeni Yıl Kampanyası: 500 TL ve üzeri alışverişlerde 100 TL indirim!
+                </p>
+              </div>
+              <div className="flex items-center gap-2 bg-white px-4 py-1.5 rounded-lg shadow-sm">
+                <span className="text-xs text-gray-600 font-medium">Kod:</span>
+                <span className="text-sm font-bold bg-gradient-to-r from-pink-600 to-orange-500 bg-clip-text text-transparent">YENIYIL2026</span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </section>
 
       {/* Categories */}
@@ -212,13 +239,6 @@ export default function Home() {
               ))
             )}
           </div>
-        </div>
-      </section>
-
-      {/* Promotions Carousel */}
-      <section className="py-16 gradient-bg">
-        <div className="container mx-auto px-4">
-          <PromoCarousel banners={carouselBanners} />
         </div>
       </section>
 

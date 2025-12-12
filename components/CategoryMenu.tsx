@@ -20,6 +20,7 @@ function CategoryMenuComponent({
   onSubcategorySelect
 }: CategoryMenuProps) {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null)
+  const [clickedCategory, setClickedCategory] = useState<string | null>(null)
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Cleanup timeout on unmount
@@ -30,6 +31,9 @@ function CategoryMenuComponent({
       }
     }
   }, [])
+
+  // Determine which category should show submenu (hover for desktop, click for mobile)
+  const activeCategory = hoveredCategory || clickedCategory
 
   // Get subcategories for a specific category (only with products)
   const getSubcategoriesForCategory = useMemo(() => {
@@ -78,20 +82,23 @@ function CategoryMenuComponent({
                 }, 200)
               }}
             >
-              <Link
-                href={`/kategori/${category.slug}`}
+              <div
+                className="flex items-center justify-between px-4 py-3 hover:bg-pink-50 transition-colors cursor-pointer"
                 onClick={(e) => {
-                  if (onCategorySelect) {
+                  // On mobile (touch devices), toggle submenu on click
+                  if (hasSubcategories && window.innerWidth < 1024) {
                     e.preventDefault()
+                    setClickedCategory(clickedCategory === category.id ? null : category.id)
+                  } else if (onCategorySelect) {
+                    // On desktop without subcategories, navigate
                     onCategorySelect(category.slug)
-                    // Clear hover state when category is selected
                     setHoveredCategory(null)
+                    setClickedCategory(null)
                     if (hoverTimeoutRef.current) {
                       clearTimeout(hoverTimeoutRef.current)
                     }
                   }
                 }}
-                className="flex items-center justify-between px-4 py-3 hover:bg-pink-50 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   {category.image_url && (
@@ -108,28 +115,33 @@ function CategoryMenuComponent({
                   </span>
                 </div>
                 {hasSubcategories && (
-                  <ChevronRight className="w-4 h-4 text-gray-400 group-hover/category:text-pink-600 transition-colors" />
+                  <ChevronRight 
+                    className={`w-4 h-4 text-gray-400 group-hover/category:text-pink-600 transition-all ${
+                      clickedCategory === category.id ? 'rotate-90' : ''
+                    }`} 
+                  />
                 )}
-              </Link>
+              </div>
 
               {/* Subcategory Dropdown */}
-              {hasSubcategories && hoveredCategory === category.id && (() => {
+              {hasSubcategories && activeCategory === category.id && (() => {
                 return (
                   <div 
-                    className="absolute left-full top-0 ml-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 z-[100] pointer-events-auto"
+                    className="lg:absolute static lg:left-full lg:top-0 lg:ml-2 w-full lg:w-64 bg-gray-50 lg:bg-white lg:rounded-xl lg:shadow-2xl border-t lg:border border-gray-200 lg:z-[100] pointer-events-auto"
                     style={{ 
-                      backgroundColor: 'white',
                       minHeight: '100px'
                     }}
                     onMouseEnter={() => {
-                      // Clear timeout when mouse enters submenu
+                      // Clear timeout when mouse enters submenu (desktop only)
                       if (hoverTimeoutRef.current) {
                         clearTimeout(hoverTimeoutRef.current)
                       }
                     }}
                     onMouseLeave={() => {
-                      // Hide submenu when mouse leaves it
-                      setHoveredCategory(null)
+                      // Hide submenu when mouse leaves it (desktop only)
+                      if (window.innerWidth >= 1024) {
+                        setHoveredCategory(null)
+                      }
                     }}
                   >
                     <div className="p-3 border-b border-gray-200">
@@ -145,8 +157,9 @@ function CategoryMenuComponent({
                           if (onSubcategorySelect) {
                             e.preventDefault()
                             onSubcategorySelect(subcategory.slug)
-                            // Clear hover state when subcategory is selected
+                            // Clear both hover and click states when subcategory is selected
                             setHoveredCategory(null)
+                            setClickedCategory(null)
                             if (hoverTimeoutRef.current) {
                               clearTimeout(hoverTimeoutRef.current)
                             }

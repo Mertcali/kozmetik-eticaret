@@ -273,7 +273,7 @@ export default function ProductFilters({
                 {subcategories.length > 0 && (
                   <div>
                     <h3 className="text-lg font-semibold mb-4">Alt Kategoriler</h3>
-                    <div className="space-y-2">
+                    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
                       <button
                         onClick={() => {
                           onSubcategoryChange(undefined)
@@ -294,7 +294,7 @@ export default function ProductFilters({
                             onSubcategoryChange(subcat.slug)
                             setIsOpen(false)
                           }}
-                          className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                          className={`w-full text-left px-4 py-2 rounded-lg transition-colors text-sm ${
                             selectedSubcategory === subcat.slug
                               ? 'bg-primary text-white'
                               : 'hover:bg-gray-100'

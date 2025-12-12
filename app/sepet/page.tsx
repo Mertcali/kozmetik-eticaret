@@ -32,6 +32,48 @@ export default function CartPage() {
   const [orderNumber, setOrderNumber] = useState("")
   const [orderTotal, setOrderTotal] = useState(0)
   const [orderItems, setOrderItems] = useState<CartItem[]>([])
+  const [promoCode, setPromoCode] = useState("")
+  const [discount, setDiscount] = useState(0)
+  const [promoApplied, setPromoApplied] = useState(false)
+
+  const applyPromoCode = () => {
+    if (promoCode.toUpperCase() === "YENIYIL2026") {
+      if (totalPrice >= 500) {
+        setDiscount(100)
+        setPromoApplied(true)
+        toast({
+          title: "Promosyon Kodu Uygulandı! 🎉",
+          description: "100 TL indirim kazandınız!",
+          type: "success",
+        })
+      } else {
+        toast({
+          title: "Yetersiz Tutar",
+          description: "Bu promosyon kodu 500 TL ve üzeri alışverişlerde geçerlidir.",
+          type: "error",
+        })
+      }
+    } else {
+      toast({
+        title: "Geçersiz Kod",
+        description: "Girdiğiniz promosyon kodu geçerli değil.",
+        type: "error",
+      })
+    }
+  }
+
+  const removePromoCode = () => {
+    setPromoCode("")
+    setDiscount(0)
+    setPromoApplied(false)
+    toast({
+      title: "Promosyon Kodu Kaldırıldı",
+      description: "İndirim kaldırıldı.",
+      type: "info",
+    })
+  }
+
+  const finalPrice = totalPrice - discount
 
   const handleCheckout = () => {
     setCheckoutStep("address")
@@ -47,8 +89,8 @@ export default function CartPage() {
     const randomOrderNumber = Math.floor(100000 + Math.random() * 900000).toString()
     setOrderNumber(randomOrderNumber)
     
-    // Save order details before clearing cart
-    setOrderTotal(totalPrice)
+    // Save order details before clearing cart (use finalPrice with discount)
+    setOrderTotal(finalPrice)
     setOrderItems([...cart])
     
     // Clear cart
@@ -70,6 +112,9 @@ export default function CartPage() {
     setOrderNumber("")
     setOrderTotal(0)
     setOrderItems([])
+    setPromoCode("")
+    setDiscount(0)
+    setPromoApplied(false)
   }
 
   const handleRemoveFromCart = (productId: string, productName: string) => {
@@ -98,7 +143,7 @@ export default function CartPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <PaymentForm
-          amount={totalPrice}
+          amount={finalPrice}
           onSubmit={handlePaymentSubmit}
           onBack={() => setCheckoutStep("address")}
         />
@@ -208,11 +253,54 @@ export default function CartPage() {
           <div className="bg-white p-6 rounded-lg shadow-sm sticky top-20">
             <h2 className="text-xl font-bold mb-4">Sipariş Özeti</h2>
             
+            {/* Promosyon Kodu */}
+            <div className="mb-6 p-4 bg-gradient-to-r from-pink-50 to-orange-50 rounded-lg border border-pink-200">
+              <p className="text-sm font-semibold text-gray-700 mb-2">🎉 Yeni Yıl Kampanyası</p>
+              <p className="text-xs text-gray-600 mb-3">500 TL ve üzeri alışverişlerde 100 TL indirim!</p>
+              {!promoApplied ? (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Promosyon Kodu"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                    className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  />
+                  <Button
+                    size="sm"
+                    onClick={applyPromoCode}
+                    disabled={!promoCode}
+                    className="bg-gradient-to-r from-pink-600 to-orange-500"
+                  >
+                    Uygula
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                  <span className="text-sm font-semibold text-green-700">✓ {promoCode}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={removePromoCode}
+                    className="text-red-500 hover:text-red-700 text-xs"
+                  >
+                    Kaldır
+                  </Button>
+                </div>
+              )}
+            </div>
+            
             <div className="space-y-3 mb-6">
               <div className="flex justify-between text-gray-600">
                 <span>Ara Toplam</span>
                 <span>{totalPrice.toFixed(2)} ₺</span>
               </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-green-600 font-semibold">
+                  <span>Promosyon İndirimi</span>
+                  <span>-{discount.toFixed(2)} ₺</span>
+                </div>
+              )}
               <div className="flex justify-between text-gray-600">
                 <span>Kargo</span>
                 <span className="text-green-600">Ücretsiz</span>
@@ -220,7 +308,9 @@ export default function CartPage() {
               <div className="border-t pt-3">
                 <div className="flex justify-between text-lg font-bold">
                   <span>Toplam</span>
-                  <span className="text-primary">{totalPrice.toFixed(2)} ₺</span>
+                  <span className="bg-gradient-to-r from-pink-600 to-orange-500 bg-clip-text text-transparent">
+                    {finalPrice.toFixed(2)} ₺
+                  </span>
                 </div>
               </div>
             </div>
