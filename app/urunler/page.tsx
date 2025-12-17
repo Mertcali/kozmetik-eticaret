@@ -111,13 +111,33 @@ export default function ProductsPage() {
           />
         </motion.div>
 
+        {/* Mobile Category Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+          className="mb-6 lg:hidden"
+        >
+          <CategoryMenu
+            categories={categories}
+            subcategories={subcategories}
+            onCategorySelect={(slug) => {
+              setSelectedCategory(slug)
+              setSelectedSubcategory(undefined)
+            }}
+            onSubcategorySelect={(slug) => {
+              setSelectedSubcategory(slug)
+            }}
+          />
+        </motion.div>
+
         <div className="flex flex-col lg:flex-row gap-8 relative">
           {/* Category Menu Sidebar */}
           <motion.aside
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
-            className="lg:w-72 flex-shrink-0 space-y-6 relative z-10"
+            className="hidden lg:block lg:w-72 flex-shrink-0 space-y-6 relative z-10"
           >
             {/* Category Menu */}
             <div className="sticky top-24">
